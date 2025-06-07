@@ -134,3 +134,40 @@ export const getSavedRecipes = async (req, res) => {
     res.status(500).json({ message: error.message || "Failed to fetch saved recipes" });
   }
 };
+
+// Remove a saved recipe
+export const removeSavedRecipe = async (req, res) => {
+  const { id } = req.params;
+
+  console.log('Attempting to remove saved recipe...');
+  console.log('User ID:', req.user?._id);
+  console.log('Recipe ID from params:', id);
+
+  if (!id) {
+    return res.status(400).json({ message: "Recipe ID is required" });
+  }
+
+  // Validate the ID format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid recipe ID format" });
+  }
+
+  try {
+    // Check if the user is authenticated
+    if (!req.user?._id) {
+      return res.status(401).json({ message: "Unauthorized: No user found" });
+    }
+
+    // Find and delete the saved recipe by its recipe ID and user ID
+    const result = await SavedRecipe.deleteOne({ recipe: id, user: req.user._id });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "Saved recipe not found or not authorized to delete" });
+    }
+
+    return res.status(200).json({ message: "Recipe removed from saved recipes successfully!" });
+  } catch (error) {
+    console.error("Error removing saved recipe:", error);
+    return res.status(500).json({ message: "Failed to remove recipe", error: error.message });
+  }
+};

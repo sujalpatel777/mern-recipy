@@ -6,6 +6,7 @@ import {
   getRecipesByUserId,
   saveRecipeById,
   getSavedRecipes,
+  removeSavedRecipe,
 } from "../controllers/recipe.js";
 import { authenticate } from "../middleware/auth.js";
 
@@ -17,5 +18,6 @@ router.get("/saved", authenticate, getSavedRecipes);
 router.get("/:id", getRecipeById);
 router.get("/user/:id", getRecipesByUserId);
 router.post("/saved", authenticate, saveRecipeById);
+router.delete("/saved/:id", authenticate, removeSavedRecipe);
 
 export default router;
