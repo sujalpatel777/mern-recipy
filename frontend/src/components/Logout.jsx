@@ -1,53 +1,33 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
-export default function Logout() {
+const Logout = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    toast.success("Logged out successfully!");
-    setTimeout(() => navigate("/Home"), 1500);
-  };
+  useEffect(() => {
+    const handleLogout = () => {
+      localStorage.removeItem('token');
+      toast.success('Logged out successfully!');
+      navigate('/login');
+    };
+
+    handleLogout();
+  }, [navigate]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-6">
-      <div className="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-700 text-center">
-        <h2 className="text-3xl font-bold text-yellow-400 mb-4">Logout</h2>
-        <p className="text-white mb-6">Are you sure you want to log out?</p>
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-500"
-        >
-          Yes, Log Out
-        </button>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+      <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600 dark:border-primary-400 mx-auto"></div>
+        <h2 className="mt-4 text-xl font-semibold text-gray-900 dark:text-white">
+          Logging out...
+        </h2>
+        <p className="mt-2 text-gray-600 dark:text-gray-400">
+          Please wait while we log you out.
+        </p>
       </div>
-      <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#333',
-              color: '#fff',
-              borderRadius: '8px',
-              padding: '16px',
-              fontSize: '14px',
-            },
-            success: {
-              iconTheme: {
-                primary: '#4ade80',
-                secondary: '#fff',
-              },
-            },
-            error: {
-              iconTheme: {
-                primary: '#ef4444',
-                secondary: '#fff',
-              },
-            },
-          }}
-        />
     </div>
   );
-}
+};
+
+export default Logout;

@@ -18,7 +18,12 @@ export default function RecipeHomePage() {
           },
         });
 
-        setRecipes(response.data.recipes || []);
+        if (response.data && Array.isArray(response.data.recipes)) {
+          setRecipes(response.data.recipes);
+        } else {
+          setRecipes([]); // Fallback to empty array if data is unexpected
+          console.warn("Unexpected response format for recipes:", response.data);
+        }
       } catch (error) {
         handleFetchError(error);
       }
@@ -85,7 +90,7 @@ export default function RecipeHomePage() {
 
   // Navigate to recipe details
   const navigateToRecipeDetails = (recipeId) => {
-    navigate(`/${recipeId}`);
+    navigate(`/recipe/${recipeId}`);
   };
 
   return (
@@ -109,14 +114,14 @@ export default function RecipeHomePage() {
                 <h5 className="text-xl font-bold text-white">{recipe.title}</h5>
                 <div className="flex justify-between mt-4">
                   <button
-                    className={`bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-500 w-full mr-2 ${isSaving ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`bg-[#a145f7] text-white py-2 px-4 rounded-lg hover:bg-[#8a2be2] w-full mr-2 ${isSaving ? 'opacity-50 cursor-not-allowed' : ''}`}
                     onClick={() => handleSaveRecipe(recipe._id)}
                     disabled={isSaving}
                   >
                     {isSaving ? 'Saving...' : 'Save'}
                   </button>
                   <button
-                    className="bg-yellow-400 text-black py-2 px-4 rounded-lg hover:bg-yellow-300 w-full"
+                    className="bg-[#a145f7] text-white py-2 px-4 rounded-lg hover:bg-[#8a2be2] w-full"
                     onClick={() => navigateToRecipeDetails(recipe._id)}
                   >
                     View

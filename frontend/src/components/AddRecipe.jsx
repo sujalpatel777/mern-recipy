@@ -97,7 +97,7 @@ export default function CreateRecipeForm() {
             value={formData.title}
             onChange={handleFormInputChange}
             required
-            className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-yellow-400 focus:outline-none"
+            className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-[#a145f7] focus:outline-none"
           />
           <textarea
             name="instructions"
@@ -105,7 +105,7 @@ export default function CreateRecipeForm() {
             value={formData.instructions}
             onChange={handleFormInputChange}
             required
-            className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-yellow-400 focus:outline-none h-32"
+            className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-[#a145f7] focus:outline-none h-32"
           />
           {formData.ingredients.map((ingredient, index) => (
             <div key={index} className="flex space-x-3">
@@ -116,7 +116,7 @@ export default function CreateRecipeForm() {
                 value={ingredient.name}
                 onChange={(e) => handleIngredientInputChange(index, e)}
                 required
-                className="w-1/2 p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-yellow-400 focus:outline-none"
+                className="w-1/2 p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-[#a145f7] focus:outline-none"
               />
               <input
                 type="text"
@@ -125,7 +125,7 @@ export default function CreateRecipeForm() {
                 value={ingredient.quantity}
                 onChange={(e) => handleIngredientInputChange(index, e)}
                 required
-                className="w-1/2 p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-yellow-400 focus:outline-none"
+                className="w-1/2 p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-[#a145f7] focus:outline-none"
               />
             </div>
           ))}
@@ -142,7 +142,7 @@ export default function CreateRecipeForm() {
             placeholder="Image URL (e.g., https://example.com/image.jpg)"
             value={formData.imgurl}
             onChange={handleFormInputChange}
-            className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-yellow-400 focus:outline-none"
+            className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-[#a145f7] focus:outline-none"
           />
           <input
             type="text"
@@ -150,11 +150,11 @@ export default function CreateRecipeForm() {
             placeholder="User ID (optional)"
             value={formData.user}
             onChange={handleFormInputChange}
-            className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-yellow-400 focus:outline-none"
+            className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-[#a145f7] focus:outline-none"
           />
           <button
             type="submit"
-            className="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-400 transition-colors"
+            className="w-full bg-[#a145f7] text-white p-3 rounded-lg hover:bg-[#8a2be2] transition-colors"
           >
             Submit Recipe
           </button>
