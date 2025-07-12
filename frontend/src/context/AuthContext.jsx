@@ -23,7 +23,9 @@ export const AuthProvider = ({ children }) => {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
             // Fetch user data
-            axios.get('http://localhost:5000/api/users/me')
+            axios.get('http://localhost:5000/api/users/me', {
+                withCredentials: true
+            })
                 .then(response => {
                     setUser(response.data.user);
                 })
@@ -40,16 +42,16 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
 
-    const login = async (gmail, password) => {
+    const login = async (userData) => {
         try {
             setLoading(true);
-            const response = await axios.post('http://localhost:5000/api/users/login', {
-                gmail,
-                password
+            const response = await axios.post('http://localhost:5000/api/users/login', userData, {
+                withCredentials: true
             });
 
             const { token, user } = response.data;
             localStorage.setItem('token', token);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             setUser(user);
             toast.success('Login successful!');
             return true;
@@ -62,17 +64,16 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const register = async (name, gmail, password) => {
+    const register = async (userData) => {
         try {
             setLoading(true);
-            const response = await axios.post('http://localhost:5000/api/users/register', {
-                name,
-                gmail,
-                password
+            const response = await axios.post('http://localhost:5000/api/users/register', userData, {
+                withCredentials: true
             });
 
             const { token, user } = response.data;
             localStorage.setItem('token', token);
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             setUser(user);
             toast.success('Registration successful!');
             return true;
@@ -85,17 +86,27 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = () => {
-        localStorage.removeItem('token');
-        setUser(null);
-        toast.success('Logged out successfully');
-        delete axios.defaults.headers.common['Authorization'];
+    const logout = async () => {
+        try {
+            await axios.post('http://localhost:5000/api/users/logout', {}, {
+                withCredentials: true
+            });
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            localStorage.removeItem('token');
+            setUser(null);
+            delete axios.defaults.headers.common['Authorization'];
+            toast.success('Logged out successfully');
+        }
     };
 
     const updateProfile = async (userData) => {
         try {
             setLoading(true);
-            const response = await axios.put('http://localhost:5000/api/users/me', userData);
+            const response = await axios.put('http://localhost:5000/api/users/me', userData, {
+                withCredentials: true
+            });
             setUser(response.data.user);
             toast.success('Profile updated successfully');
             return true;

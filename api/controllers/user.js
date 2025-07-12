@@ -45,37 +45,70 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { gmail, password } = req.body;
-
   try {
-    const user = await User.findOne({ gmail });
+    const { gmail, password } = req.body;
 
-    if (!user) return res.status(404).json({ message: "User not found" });
+    // Input validation
+    if (!gmail || !password) {
+      return res.status(400).json({
+        message: "Please provide both email and password"
+      });
+    }
 
+    // Find user and explicitly select password field
+    const user = await User.findOne({ gmail }).select('+password');
+
+    if (!user) {
+      return res.status(401).json({
+        message: "Invalid email or password"
+      });
+    }
+
+    // Compare password
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if (!isPasswordValid) return res.status(401).json({ message: "Invalid credentials" });
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        message: "Invalid email or password"
+      });
+    }
 
     // Generate JWT Token
     const token = jwt.sign(
       { userId: user._id },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || 'your-secret-key',
       { expiresIn: "1d" }
     );
 
-    res.json({
+    // Remove password from user object
+    const userWithoutPassword = {
+      id: user._id,
+      name: user.name,
+      gmail: user.gmail,
+      gender: user.gender,
+      phone: user.phone,
+      birthday: user.birthday,
+      photo: user.photo
+    };
+    
+    // Set cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 24 * 60 * 60 * 1000 // 1 day
+    });
+
+    res.status(200).json({
       message: "Login successful",
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        gmail: user.gmail
-      }
+      user: userWithoutPassword
     });
 
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "An error occurred during login. Please try again."
+    });
   }
 };
 

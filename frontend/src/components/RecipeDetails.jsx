@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -13,7 +13,7 @@ const RecipeDetails = () => {
     useEffect(() => {
         const fetchRecipeDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/recipes/${id}`);
+                const response = await axios.get(`http://localhost:5000/api/recipes/get/${id}`);
                 setRecipe(response.data.recipe);
                 setLoading(false);
             } catch (err) {

@@ -17,7 +17,7 @@ export default function FetchRecipeById() {
           return;
         }
 
-        const response = await axios.get(`http://localhost:5000/api/recipes/${id}`, {
+        const response = await axios.get(`http://localhost:5000/api/recipes/get/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -98,31 +98,7 @@ export default function FetchRecipeById() {
           Back to Home
         </Link>
       </div>
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: '#333',
-            color: '#fff',
-            borderRadius: '8px',
-            padding: '16px',
-            fontSize: '14px',
-          },
-          success: {
-            iconTheme: {
-              primary: '#4ade80',
-              secondary: '#fff',
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: '#ef4444',
-              secondary: '#fff',
-            },
-          },
-        }}
-      />
+     
     </div>
   );
 }

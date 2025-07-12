@@ -223,31 +223,7 @@ export default function Profile() {
           >
             Back to Home
           </button>
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              duration: 4000,
-              style: {
-                background: '#333',
-                color: '#fff',
-                borderRadius: '8px',
-                padding: '16px',
-                fontSize: '14px',
-              },
-              success: {
-                iconTheme: {
-                  primary: '#4ade80',
-                  secondary: '#fff',
-                },
-              },
-              error: {
-                iconTheme: {
-                  primary: '#ef4444',
-                  secondary: '#fff',
-                },
-              },
-            }}
-          />
+        
         </div>
       </div>
     </div>

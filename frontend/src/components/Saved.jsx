@@ -70,7 +70,6 @@ export default function Saved() {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-4xl font-bold text-[#a145f7] mb-8 text-center">Saved Recipes</h1>
-      <Toaster />
       {savedRecipes.length === 0 ? (
         <div className="text-center text-white p-4">No saved recipes found.</div>
       ) : (

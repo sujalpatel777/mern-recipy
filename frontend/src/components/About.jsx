@@ -2,7 +2,7 @@ import React from "react";
 
 export default function About() {
     const skills = [
-        "React", "Node.js", "JavaScript", "TypeScript", "MongoDB", "Express.js",
+        "React", "Node.js", "JavaScript", "MongoDB", "Express.js",
         "Tailwind CSS", "Git", "REST APIs", "Web Development"
     ];
 

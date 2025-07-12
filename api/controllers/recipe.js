@@ -40,6 +40,8 @@ export const getAllRecipes = async (req, res) => {
 // Get recipe by ID
 export const getRecipeById = async (req, res) => {
   const { id } = req.params;
+  console.log("Hello");
+  
 
   if (!id.match(/^[0-9a-fA-F]{24}$/)) {
     return res.status(400).json({ message: "Invalid recipe ID format" });
@@ -169,5 +171,52 @@ export const removeSavedRecipe = async (req, res) => {
   } catch (error) {
     console.error("Error removing saved recipe:", error);
     return res.status(500).json({ message: "Failed to remove recipe", error: error.message });
+  }
+};
+
+// Update a recipe by ID
+export const updateRecipe = async (req, res) => {
+  const { id } = req.params;
+  const { title, instructions, ingredients, imgurl } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid recipe ID format" });
+  }
+
+  try {
+    const recipe = await Recipe.findById(id);
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+    // Only allow the owner to update
+    if (recipe.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized to update this recipe" });
+    }
+    recipe.title = title || recipe.title;
+    recipe.instructions = instructions || recipe.instructions;
+    recipe.ingredients = ingredients || recipe.ingredients;
+    recipe.imgurl = imgurl || recipe.imgurl;
+    await recipe.save();
+    res.status(200).json({ message: "Recipe updated successfully!", recipe });
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Failed to update recipe" });
+  }
+};
+
+// Search recipes by name
+export const searchRecipesByName = async (req, res) => {
+  const { name } = req.query;
+  console.log(name);
+  
+  if (!name) {
+    return res.status(400).json({ message: "Name query parameter is required" });
+  }
+  try {
+    const recipes = await Recipe.find({
+      title: { $regex: name, $options: "i" }
+    })
+    res.json({ recipes });
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Failed to search recipes" });
   }
 };
