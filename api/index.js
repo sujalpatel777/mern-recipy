@@ -11,8 +11,8 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: ["https://mern-recipy-1.onrender.com", "http://localhost:5173"],
-  credentials: true
+  origin: "*",            // allow all origins
+  credentials: true       // allow cookies (note: with "*" origin, credentials won't work)
 }));
 
 app.use(express.json());
@@ -28,10 +28,7 @@ app.get("/", (req, res) => {
 const port = process.env.PORT || 5000;
 
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to MongoDB Atlas");
     app.listen(port, () => console.log(`Server running at https://mern-recipy-1.onrender.com:${port}`));

@@ -40,7 +40,7 @@ export const register = async (req, res) => {
 
     res.status(201).json({ message: "User registered successfully!", user, token: accessToken });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, msg: "Just fun" });
   }
 };
 
@@ -90,7 +90,7 @@ export const login = async (req, res) => {
       birthday: user.birthday,
       photo: user.photo
     };
-    
+
     // Set cookie
     res.cookie('token', token, {
       httpOnly: true,
@@ -107,7 +107,7 @@ export const login = async (req, res) => {
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({
-      message: "An error occurred during login. Please try again."
+      message: "An error occurred during login. Please try again.", msg: "Just fun"
     });
   }
 };

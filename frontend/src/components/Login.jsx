@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+
 import { FaUser, FaLock, FaGithub } from 'react-icons/fa';
 import { url } from "../base";
 
