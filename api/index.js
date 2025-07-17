@@ -34,6 +34,6 @@ mongoose
   })
   .then(() => {
     console.log("Connected to MongoDB Atlas");
-    app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
+    app.listen(port, () => console.log(`Server running at https://mern-recipy-1.onrender.com:${port}`));
   })
   .catch((err) => console.error("MongoDB connection error:", err));
