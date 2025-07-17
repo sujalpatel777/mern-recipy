@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
+import { url } from "../base";
 
 export default function EditRecipe() {
     const { id } = useParams();
@@ -18,7 +19,7 @@ export default function EditRecipe() {
         const fetchRecipe = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const response = await axios.get(`http://localhost:5000/api/recipes/get/${id}`, {
+                const response = await axios.get(`${url}/api/recipes/get/${id}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const recipe = response.data.recipe || response.data;
@@ -68,7 +69,7 @@ export default function EditRecipe() {
                 ingredients: filteredIngredients,
             };
             await axios.put(
-                `http://localhost:5000/api/recipes/${id}`,
+                `${url}/api/recipes/${id}`,
                 recipePayload,
                 {
                     headers: {
@@ -154,7 +155,7 @@ export default function EditRecipe() {
                         Update Recipe
                     </button>
                 </form>
-    
+
             </div>
         </div>
     );

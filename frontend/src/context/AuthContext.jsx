@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { url } from "../base";
 
 const AuthContext = createContext(null);
 
@@ -23,7 +24,7 @@ export const AuthProvider = ({ children }) => {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
             // Fetch user data
-            axios.get('http://localhost:5000/api/users/me', {
+            axios.get(`${url}/api/users/me`, {
                 withCredentials: true
             })
                 .then(response => {
@@ -45,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (userData) => {
         try {
             setLoading(true);
-            const response = await axios.post('http://localhost:5000/api/users/login', userData, {
+            const response = await axios.post(`${url}/api/users/login`, userData, {
                 withCredentials: true
             });
 
@@ -67,7 +68,7 @@ export const AuthProvider = ({ children }) => {
     const register = async (userData) => {
         try {
             setLoading(true);
-            const response = await axios.post('http://localhost:5000/api/users/register', userData, {
+            const response = await axios.post(`${url}/api/users/register`, userData, {
                 withCredentials: true
             });
 
@@ -88,7 +89,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            await axios.post('http://localhost:5000/api/users/logout', {}, {
+            await axios.post(`${url}/api/users/logout`, {}, {
                 withCredentials: true
             });
         } catch (error) {
@@ -104,7 +105,7 @@ export const AuthProvider = ({ children }) => {
     const updateProfile = async (userData) => {
         try {
             setLoading(true);
-            const response = await axios.put('http://localhost:5000/api/users/me', userData, {
+            const response = await axios.put(`${url}/api/users/me`, userData, {
                 withCredentials: true
             });
             setUser(response.data.user);
@@ -122,7 +123,7 @@ export const AuthProvider = ({ children }) => {
     const changePassword = async (currentPassword, newPassword) => {
         try {
             setLoading(true);
-            await axios.put('http://localhost:5000/api/users/change-password', {
+            await axios.put(`${url}/api/users/change-password`, {
                 currentPassword,
                 newPassword
             });
@@ -140,7 +141,7 @@ export const AuthProvider = ({ children }) => {
     const forgotPassword = async (email) => {
         try {
             setLoading(true);
-            await axios.post('http://localhost:5000/api/users/forgot-password', { email });
+            await axios.post(`${url}/api/users/forgot-password`, { email });
             toast.success('Password reset instructions sent to your email');
             return true;
         } catch (error) {
@@ -155,7 +156,7 @@ export const AuthProvider = ({ children }) => {
     const resetPassword = async (token, newPassword) => {
         try {
             setLoading(true);
-            await axios.post('http://localhost:5000/api/users/reset-password', {
+            await axios.post(`${url}/api/users/reset-password`, {
                 token,
                 newPassword
             });

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
+import { url } from "../base";
 
 export default function RecipeHomePage() {
   const navigate = useNavigate();
@@ -14,8 +15,8 @@ export default function RecipeHomePage() {
   useEffect(() => {
     const fetchAllRecipes = async () => {
       try {
-        if(search!="") return
-        const response = await axios.get("http://localhost:5000/api/recipes", {
+        if (search != "") return
+        const response = await axios.get(`${url}/api/recipes`, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -57,7 +58,7 @@ export default function RecipeHomePage() {
       }
 
       const response = await axios.post(
-        "http://localhost:5000/api/recipes/saved",
+        `${url}/api/recipes/saved`,
         { id: recipeId },
         {
           headers: {
@@ -106,7 +107,7 @@ export default function RecipeHomePage() {
       console.log("In serach");
 
       try {
-        const response = await axios.get(`http://localhost:5000/api/recipes/search?name=${search}`)
+        const response = await axios.get(`${url}/recipes/search?name=${search}`)
         setRecipes(response.data.recipes || []);
         console.log(response);
       } catch (error) {
@@ -186,7 +187,7 @@ export default function RecipeHomePage() {
           ))
         )}
       </div>
-     
+
     </div>
   );
 }

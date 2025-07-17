@@ -5,6 +5,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { FaUser, FaEnvelope, FaLock, FaPhone, FaBirthdayCake, FaVenusMars, FaCamera } from 'react-icons/fa';
+import { url } from "../base";
 
 const Register = () => {
     const { login, setUser } = useAuth();
@@ -51,7 +52,7 @@ const Register = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:5000/api/users/register', {
+            const response = await axios.post(`${url}/api/users/register`, {
                 ...formData,
                 // Do not send photo for now
             });
@@ -360,7 +361,7 @@ const Register = () => {
                     </div>
                 </motion.div>
             </motion.div>
-          
+
         </motion.div>
     );
 };

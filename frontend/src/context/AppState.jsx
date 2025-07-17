@@ -2,12 +2,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import { url } from "../base";
 
 // Create a context for the application
 export const AppContext = createContext();
 
 const AppState = ({ children }) => {
-  const url = "http://localhost:5000/api"; // Base URL for API requests
   const [state, setState] = useState({ user: null, isAuthenticated: false });
   const [recipe, setRecipe] = useState([]);
   const [savedRecipe, setSavedRecipe] = useState([]);
@@ -19,7 +19,7 @@ const AppState = ({ children }) => {
   const fetchRequest = async (endpoint, method = "GET", data = null, auth = false) => {
     const options = {
       method,
-      url: `${url}${endpoint}`,
+      url: `${url}/api${endpoint}`,
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
       data,

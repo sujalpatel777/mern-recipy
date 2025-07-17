@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { FaUser, FaLock, FaGithub } from 'react-icons/fa';
+import { url } from "../base";
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -37,7 +38,7 @@ const Login = () => {
     };
 
     const handleGitHubLogin = () => {
-        window.location.href = 'http://localhost:5000/api/auth/github';
+        window.location.href = `${url}/api/auth/github`;
     };
 
     return (

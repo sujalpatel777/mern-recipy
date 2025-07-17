@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { url } from "../base";
 
 export default function Saved() {
   const [savedRecipes, setSavedRecipes] = useState([]);
@@ -17,7 +18,7 @@ export default function Saved() {
       }
 
       try {
-        const response = await axios.get("http://localhost:5000/api/recipes/saved", {
+        const response = await axios.get(`${url}/api/recipes/saved`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -47,7 +48,7 @@ export default function Saved() {
 
     try {
       setIsRemoving(true);
-      const response = await axios.delete(`http://localhost:5000/api/recipes/saved/${recipeId}`, {
+      const response = await axios.delete(`${url}/api/recipes/saved/${recipeId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

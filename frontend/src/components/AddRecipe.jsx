@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { url } from "../base";
 
 export default function CreateRecipeForm() {
   const [formData, setFormData] = useState({
@@ -59,7 +60,7 @@ export default function CreateRecipeForm() {
       };
 
       const response = await axios.post(
-        "http://localhost:5000/api/recipes/add",
+        `${url}/api/recipes/add`,
         recipePayload,
         {
           headers: {
@@ -159,7 +160,7 @@ export default function CreateRecipeForm() {
             Submit Recipe
           </button>
         </form>
-  
+
       </div>
     </div>
   );

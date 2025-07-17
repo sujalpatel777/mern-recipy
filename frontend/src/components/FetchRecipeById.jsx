@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
+import { url } from "../base";
 
 export default function FetchRecipeById() {
   const { id } = useParams();
@@ -17,7 +18,7 @@ export default function FetchRecipeById() {
           return;
         }
 
-        const response = await axios.get(`http://localhost:5000/api/recipes/get/${id}`, {
+        const response = await axios.get(`${url}/recipes/get/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -98,7 +99,7 @@ export default function FetchRecipeById() {
           Back to Home
         </Link>
       </div>
-     
+
     </div>
   );
 }

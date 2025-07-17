@@ -3,6 +3,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaPhone, FaBirthdayCake, FaVenusMars, FaCamera } from 'react-icons/fa';
+import { url } from "../base";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -22,10 +23,10 @@ export default function Profile() {
         }
 
         const [userResponse, savedResponse] = await Promise.all([
-          axios.get('http://localhost:5000/api/users/profile', {
+          axios.get(`${url}/api/users/profile`, {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          axios.get('http://localhost:5000/api/recipes/saved', {
+          axios.get(`${url}/api/recipes/saved`, {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);
@@ -74,7 +75,7 @@ export default function Profile() {
         navigate('/login');
         return;
       }
-      await axios.put("http://localhost:5000/api/users/me", editData, {
+      await axios.put(`${url}/users/me`, editData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -223,7 +224,7 @@ export default function Profile() {
           >
             Back to Home
           </button>
-        
+
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { url } from "../base";
 
 const RecipeDetails = () => {
     const { id } = useParams();
@@ -13,7 +14,7 @@ const RecipeDetails = () => {
     useEffect(() => {
         const fetchRecipeDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/recipes/get/${id}`);
+                const response = await axios.get(`${url}/api/recipes/get/${id}`);
                 setRecipe(response.data.recipe);
                 setLoading(false);
             } catch (err) {
@@ -40,7 +41,7 @@ const RecipeDetails = () => {
             }
 
             await axios.post(
-                `http://localhost:5000/api/recipes/saved`,
+                `${url}/api/recipes/saved`,
                 { id: recipe._id },
                 {
                     headers: {
