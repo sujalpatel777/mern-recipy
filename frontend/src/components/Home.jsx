@@ -107,7 +107,7 @@ export default function RecipeHomePage() {
       console.log("In serach");
 
       try {
-        const response = await axios.get(`${url}/recipes/search?name=${search}`)
+        const response = await axios.get(`${url}/api/recipes/search?name=${search}`)
         setRecipes(response.data.recipes || []);
         console.log(response);
       } catch (error) {
