@@ -11,10 +11,28 @@ import {
   searchRecipesByName,
 } from "../controllers/recipe.js";
 import { authenticate } from "../middleware/auth.js";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 
 const router = express.Router();
 
-router.post("/add", authenticate, addRecipe);
+// Set up Multer storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadPath = "uploads/";
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
+
+// Route supporting file upload
+router.post("/add", authenticate, upload.single("image"), addRecipe);
 router.get("/", getAllRecipes);
 router.get("/saved", authenticate, getSavedRecipes);
 router.get("/get/:id", getRecipeById);

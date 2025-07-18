@@ -3,17 +3,25 @@ import { SavedRecipe } from "../models/SavedRecipe.js";
 import mongoose from "mongoose";
 // Add a new recipe
 export const addRecipe = async (req, res) => {
-  const { title, instructions, ingredients, imgurl } = req.body;
+  const { title, instructions, ingredients } = req.body;
+  let imgurl = req.body.imgurl; // for URL upload
+
+  // If an image file is uploaded, use its path instead
+  if (req.file) {
+    imgurl = `${req.protocol}://${req.get("host")}/${req.file.path.replace(/\\/g, "/")}`;
+  }
 
   if (!title || !instructions || !ingredients || !imgurl) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
+    const parsedIngredients = typeof ingredients === "string" ? JSON.parse(ingredients) : ingredients;
+
     const recipe = await Recipe.create({
       title,
       instructions,
-      ingredients,
+      ingredients: parsedIngredients,
       imgurl,
       user: req.user._id,
     });
@@ -41,7 +49,7 @@ export const getAllRecipes = async (req, res) => {
 export const getRecipeById = async (req, res) => {
   const { id } = req.params;
   console.log("Hello");
-  
+
 
   if (!id.match(/^[0-9a-fA-F]{24}$/)) {
     return res.status(400).json({ message: "Invalid recipe ID format" });
@@ -207,7 +215,7 @@ export const updateRecipe = async (req, res) => {
 export const searchRecipesByName = async (req, res) => {
   const { name } = req.query;
   console.log(name);
-  
+
   if (!name) {
     return res.status(400).json({ message: "Name query parameter is required" });
   }

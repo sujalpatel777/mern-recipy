@@ -11,10 +11,25 @@ export default function CreateRecipeForm() {
     imgurl: "",
     user: "",
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
 
   const handleFormInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    if (name === "imgurl") {
+      setImagePreview(value);
+      setImageFile(null); // Clear file if URL is entered
+    }
+  };
+
+  const handleImageFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+      setFormData({ ...formData, imgurl: "" }); // Clear URL if file is selected
+    }
   };
 
   const handleIngredientInputChange = (index, e) => {
@@ -39,6 +54,8 @@ export default function CreateRecipeForm() {
       imgurl: "",
       user: "",
     });
+    setImageFile(null);
+    setImagePreview("");
   };
 
   const validateAndSubmitRecipe = async (e) => {
@@ -54,23 +71,42 @@ export default function CreateRecipeForm() {
         (ingredient) => ingredient.name.trim() && ingredient.quantity.trim()
       );
 
-      const recipePayload = {
-        ...formData,
-        ingredients: filteredIngredients,
-      };
-
-      const response = await axios.post(
-        `${url}/api/recipes/add`,
-        recipePayload,
-        {
+      let response;
+      if (imageFile) {
+        // Use FormData for file upload
+        const data = new FormData();
+        data.append("title", formData.title);
+        data.append("instructions", formData.instructions);
+        data.append("ingredients", JSON.stringify(filteredIngredients));
+        data.append("image", imageFile);
+        if (formData.user) data.append("user", formData.user);
+        response = await axios.post(`${url}/api/recipes/add`, data, {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
-        }
-      );
+        });
+      } else {
+        // Use JSON for URL upload
+        const recipePayload = {
+          ...formData,
+          ingredients: filteredIngredients,
+        };
+        response = await axios.post(
+          `${url}/api/recipes/add`,
+          recipePayload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
 
       toast.success(response.data.message || "Recipe added successfully!");
+      // Show the uploaded/linked image after success
+      setImagePreview(response.data.recipe.imgurl || "");
       resetForm();
     } catch (error) {
       handleRecipeSubmissionError(error);
@@ -137,14 +173,26 @@ export default function CreateRecipeForm() {
           >
             Add Another Ingredient
           </button>
-          <input
-            type="url"
-            name="imgurl"
-            placeholder="Image URL (e.g., https://example.com/image.jpg)"
-            value={formData.imgurl}
-            onChange={handleFormInputChange}
-            className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-[#a145f7] focus:outline-none"
-          />
+          <div className="flex flex-col gap-2">
+            <label className="text-white">Image URL (optional):</label>
+            <input
+              type="url"
+              name="imgurl"
+              placeholder="Image URL (e.g., https://example.com/image.jpg)"
+              value={formData.imgurl}
+              onChange={handleFormInputChange}
+              className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-[#a145f7] focus:outline-none"
+              disabled={!!imageFile}
+            />
+            <label className="text-white">Or Upload Image:</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageFileChange}
+              className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-[#a145f7] focus:outline-none"
+              disabled={!!formData.imgurl}
+            />
+          </div>
           <input
             type="text"
             name="user"
@@ -160,7 +208,16 @@ export default function CreateRecipeForm() {
             Submit Recipe
           </button>
         </form>
-
+        {imagePreview && (
+          <div className="mt-6 text-center">
+            <p className="text-white mb-2">Image Preview:</p>
+            <img
+              src={imagePreview}
+              alt="Recipe Preview"
+              className="mx-auto max-h-60 rounded-lg border border-gray-600"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
