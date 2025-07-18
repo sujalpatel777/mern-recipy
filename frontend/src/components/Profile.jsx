@@ -75,7 +75,7 @@ export default function Profile() {
         navigate('/login');
         return;
       }
-      await axios.put(`${url}/users/me`, editData, {
+      await axios.put(`${url}/api/users/me`, editData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
