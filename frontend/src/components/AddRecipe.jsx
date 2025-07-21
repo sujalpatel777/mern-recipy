@@ -123,7 +123,7 @@ export default function CreateRecipeForm() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 p-6">
       <div className="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-lg border border-gray-700">
-        <h1 className="text-3xl font-bold text-yellow-400 mb-6 text-center">
+        <h1 className="text-3xl font-bold text-purple-400 mb-6 text-center">
           Add a New Recipe
         </h1>
         <form onSubmit={validateAndSubmitRecipe} className="space-y-4">

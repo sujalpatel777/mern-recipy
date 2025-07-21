@@ -140,7 +140,7 @@ export default function RecipeHomePage() {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold text-purple-400 mb-8 text-center">Explore Recipes</h1>
+      <h1 className="text-3xl font-bold text-purple-400 mb-16 text-center">Explore Recipes</h1>
       <form onSubmit={handleSearch} className="flex justify-center mb-8">
         <input
           type="text"

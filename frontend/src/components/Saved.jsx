@@ -72,7 +72,7 @@ export default function Saved() {
     <div className="container mx-auto p-6">
       <h1 className="text-4xl font-bold text-[#a145f7] mb-8 text-center">Saved Recipes</h1>
       {savedRecipes.length === 0 ? (
-        <div className="text-center text-white p-4">No saved recipes found.</div>
+        <div className="text-center text-black p-4">No saved recipes found.</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {savedRecipes.map((savedRecipe) => (

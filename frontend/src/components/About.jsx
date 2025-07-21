@@ -9,7 +9,7 @@ export default function About() {
     return (
         <div className="flex flex-col items-center justify-center min-h-[80vh] bg-gray-100 dark:bg-gray-900 rounded-xl shadow-lg p-4 sm:p-8 mx-auto w-full max-w-lg sm:max-w-2xl mt-6 sm:mt-10">
             {/* Profile Section */}
-            <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-yellow-400 dark:border-yellow-300 mb-4">
+            <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-purple-400 dark:border-purple-300 mb-4">
                 <img
                     src="sujal.jpg"
                     alt="Sujal Patel"
@@ -18,7 +18,7 @@ export default function About() {
             </div>
 
             {/* Name and Title */}
-            <h2 className="text-2xl sm:text-3xl font-bold text-yellow-400 dark:text-purple-300 mb-1">Sujal Patel</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-purple-400 dark:text-purple-300 mb-1">Sujal Patel</h2>
             <p className="text-gray-700 dark:text-gray-300 text-lg sm:text-xl mb-4">Full Stack Developer</p>
 
             {/* Bio Section */}
@@ -31,7 +31,7 @@ export default function About() {
 
             {/* Skills Section */}
             <div className="w-full mb-8">
-                <h3 className="text-lg sm:text-xl font-semibold text-yellow-400 dark:text-purple-300 mb-4 text-center">Technical Skills</h3>
+                <h3 className="text-lg sm:text-xl font-semibold text-purple-400 dark:text-purple-300 mb-4 text-center">Technical Skills</h3>
                 <div className="flex flex-wrap justify-center gap-2">
                     {skills.map((skill, index) => (
                         <span
