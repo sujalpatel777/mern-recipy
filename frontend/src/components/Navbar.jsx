@@ -81,7 +81,7 @@ const Navbar = () => {
               <Link to="/">
                 <img src="/recipy-logo.png" alt="Recipy Logo" className="h-12 w-12 object-contain transition-transform group-hover:scale-110" />
               </Link>
-              <Link to="/" className="text-xl font-bold text-yellow-400 tracking-wide transition-colors group-hover:text-yellow-300">
+              <Link to="/" className="text-xl font-bold text-purple-400 tracking-wide transition-colors group-hover:text-yellow-300">
                 MAKE RECIPY
               </Link>
             </motion.div>

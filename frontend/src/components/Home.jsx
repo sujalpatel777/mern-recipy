@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { url } from "../base";
+import { MdDeleteForever } from "react-icons/md";
 
 export default function RecipeHomePage() {
   const navigate = useNavigate();
@@ -102,7 +103,7 @@ export default function RecipeHomePage() {
     console.log(search);
 
     if (search.trim()) {
-      // If search is empty, fetch all recipes
+ 
       setSearching(true);
       console.log("In serach");
 
@@ -116,17 +117,30 @@ export default function RecipeHomePage() {
       setSearching(false);
       return;
     }
-    // try {
-    //   const response = await axios.get(`http://localhost:5000/api/recipes/search?name=${encodeURIComponent(search)}`);
-    //   setRecipes(response.data.recipes || []);
-    // } catch (error) {
-    //   handleFetchError(error);
-    // }
+  };
+
+  const handleDeleteRecipe = async (recipeId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("Please login to delete recipes");
+        return;
+      }
+      await axios.delete(`${url}/api/recipes/${recipeId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setRecipes((prev) => prev.filter((r) => r._id !== recipeId));
+      toast.success("Recipe deleted successfully!");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete recipe");
+    }
   };
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-4xl font-bold text-yellow-400 mb-8 text-center">Explore Recipes</h1>
+      <h1 className="text-3xl font-bold text-purple-400 mb-8 text-center">Explore Recipes</h1>
       <form onSubmit={handleSearch} className="flex justify-center mb-8">
         <input
           type="text"
@@ -173,6 +187,13 @@ export default function RecipeHomePage() {
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm0 0L7.586 14.414a2 2 0 000 2.828l.586.586a2 2 0 002.828 0L15 13" /></svg>
                       Edit
+                    </button>
+                    <button
+                      className="bg-red-500 text-white py-2 px-3 rounded-lg hover:bg-red-700 w-full mr-2 flex items-center justify-center"
+                      onClick={() => handleDeleteRecipe(recipe._id)}
+                    >
+                      <MdDeleteForever className="h-5 w-5 mr-1" />
+
                     </button>
                     <button
                       className="bg-[#a145f7] text-white py-2 px-4 rounded-lg hover:bg-[#8a2be2] w-full"

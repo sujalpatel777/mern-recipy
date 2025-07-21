@@ -228,3 +228,24 @@ export const searchRecipesByName = async (req, res) => {
     res.status(500).json({ message: error.message || "Failed to search recipes" });
   }
 };
+
+export const deleteRecipe = async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid recipe ID format" });
+  }
+  try {
+    const recipe = await Recipe.findById(id);
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+    // Only allow the owner to delete
+    if (recipe.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized to delete this recipe" });
+    }
+    await recipe.deleteOne();
+    res.status(200).json({ message: "Recipe deleted successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Failed to delete recipe" });
+  }
+};
