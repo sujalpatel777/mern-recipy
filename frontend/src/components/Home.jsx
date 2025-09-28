@@ -1,10 +1,21 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { url } from "../base";
 import { MdDeleteForever, MdEdit, MdSearch, MdSave, MdVisibility } from "react-icons/md";
+
+// Your fetchFilteredRecipes function
+const fetchFilteredRecipes = async (categories) => {
+  try {
+    const queryParams = categories ? `?categories=${categories.join(',')}` : '';
+    const response = await axios.get(`${url}/api/recipes/filter${queryParams}`);
+    return response.data.recipes;
+  } catch (error) {
+    console.error('Error fetching filtered recipes:', error);
+    throw error;
+  }
+};
 
 export default function RecipeHomePage() {
   const navigate = useNavigate();
@@ -26,19 +37,10 @@ export default function RecipeHomePage() {
         setLoading(true);
         if (search !== "") return;
         
-        const response = await axios.get(`${url}/api/recipes`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (response.data && Array.isArray(response.data.recipes)) {
-          setRecipes(response.data.recipes);
-          setFilteredRecipes(response.data.recipes);
-        } else {
-          setRecipes([]);
-          setFilteredRecipes([]);
-        }
+        // Use fetchFilteredRecipes to get all recipes when no categories specified
+        const allRecipes = await fetchFilteredRecipes();
+        setRecipes(allRecipes);
+        setFilteredRecipes(allRecipes);
       } catch (error) {
         handleFetchError(error);
       } finally {
@@ -48,42 +50,42 @@ export default function RecipeHomePage() {
     fetchAllRecipes();
   }, [search]);
 
-  // Apply filters whenever recipes or filters change
+  // Apply filters using the API endpoint
   useEffect(() => {
     applyFilters();
   }, [recipes, filters]);
 
-  const applyFilters = () => {
-    let filtered = recipes;
+  const applyFilters = async () => {
+    try {
+      setLoading(true);
+      let categories = [];
 
-    // Apply vegetarian filter
-    if (filters.vegetarian && !filters.nonVegetarian) {
-      filtered = filtered.filter(recipe => recipe.isVegetarian === true);
-    }
-    
-    // Apply non-vegetarian filter
-    if (filters.nonVegetarian && !filters.vegetarian) {
-      filtered = filtered.filter(recipe => recipe.isVegetarian === false);
-    }
+      // Build categories array based on filter selection
+      if (filters.vegetarian && !filters.nonVegetarian) {
+        categories = ['vegetarian'];
+      } else if (filters.nonVegetarian && !filters.vegetarian) {
+        categories = ['nonvegetarian'];
+      } else if (filters.vegetarian && filters.nonVegetarian) {
+        categories = ['vegetarian', 'nonvegetarian'];
+      }
+      // If no filters are selected, categories remains empty (shows all)
 
-    // If both filters are selected, show all recipes
-    if (filters.vegetarian && filters.nonVegetarian) {
-      filtered = recipes;
+      // Use the API endpoint to get filtered recipes
+      const filtered = await fetchFilteredRecipes(categories.length > 0 ? categories : undefined);
+      setFilteredRecipes(filtered);
+    } catch (error) {
+      handleFetchError(error);
+    } finally {
+      setLoading(false);
     }
-
-    // If no filters are selected, show all recipes
-    if (!filters.vegetarian && !filters.nonVegetarian) {
-      filtered = recipes;
-    }
-
-    setFilteredRecipes(filtered);
   };
 
-  const handleFilterChange = (filterType) => {
-    setFilters(prev => ({
-      ...prev,
-      [filterType]: !prev[filterType]
-    }));
+  const handleFilterChange = async (filterType) => {
+    const newFilters = {
+      ...filters,
+      [filterType]: !filters[filterType]
+    };
+    setFilters(newFilters);
   };
 
   const clearAllFilters = () => {
@@ -189,24 +191,19 @@ export default function RecipeHomePage() {
     }
   };
 
-  const clearSearch = () => {
+  const clearSearch = async () => {
     setSearch("");
-    // Refetch all recipes when search is cleared
-    const fetchAllRecipes = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`${url}/api/recipes`);
-        if (response.data && Array.isArray(response.data.recipes)) {
-          setRecipes(response.data.recipes);
-          setFilteredRecipes(response.data.recipes);
-        }
-      } catch (error) {
-        handleFetchError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAllRecipes();
+    // Refetch all recipes when search is cleared using fetchFilteredRecipes
+    try {
+      setLoading(true);
+      const allRecipes = await fetchFilteredRecipes();
+      setRecipes(allRecipes);
+      setFilteredRecipes(allRecipes);
+    } catch (error) {
+      handleFetchError(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const hasActiveFilters = filters.vegetarian || filters.nonVegetarian;
@@ -297,7 +294,7 @@ export default function RecipeHomePage() {
               {/* Results Count */}
               <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Showing {filteredRecipes.length} of {recipes.length} recipes
+                  Showing {filteredRecipes.length} recipes
                 </p>
               </div>
             </div>
