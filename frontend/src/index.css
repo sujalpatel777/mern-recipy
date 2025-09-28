@@ -7,6 +7,12 @@ body {
   font-family: 'Roboto', sans-serif;
   background-color: #fff;
   color: black;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark {
+  background-color: #1a1a1a;
+  color: white;
 }
 
 input,
@@ -16,4 +22,17 @@ textarea {
 
 button {
   transition: all 0.3s ease;
+}
+
+/* Theme-aware component styles */
+.theme-card {
+  @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700;
+}
+
+.theme-text {
+  @apply text-gray-900 dark:text-white;
+}
+
+.theme-input {
+  @apply bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600;
 }

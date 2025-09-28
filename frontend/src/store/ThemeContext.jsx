@@ -1,4 +1,4 @@
-// ThemeToggle component with Framer Motion animations
+// src/components/ThemeToggle.jsx
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 
@@ -53,4 +53,4 @@ const ThemeToggle = () => {
     );
 };
 
-export default ThemeToggle; 
+export default ThemeToggle;

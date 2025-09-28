@@ -10,6 +10,7 @@ import {
   updateRecipe,
   searchRecipesByName,
   deleteRecipe,
+  filterRecipesByCategory,
 } from "../controllers/recipe.js";
 import { authenticate } from "../middleware/auth.js";
 import multer from "multer";
@@ -42,6 +43,7 @@ router.post("/saved", authenticate, saveRecipeById);
 router.delete("/saved/:id", authenticate, removeSavedRecipe);
 router.put("/:id", authenticate, updateRecipe);
 router.get('/search', searchRecipesByName);
+router.get('/filter', filterRecipesByCategory);
 router.delete("/:id", authenticate, deleteRecipe);
 
 

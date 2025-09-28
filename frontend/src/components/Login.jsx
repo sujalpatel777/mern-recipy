@@ -1,9 +1,11 @@
+
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { FaUser, FaLock, FaGithub } from 'react-icons/fa';
+import { FaUser, FaLock, FaEye, FaEyeSlash, FaGithub, FaApple, FaGoogle } from 'react-icons/fa';
 import { url } from "../base";
 
 const Login = () => {
@@ -11,6 +13,7 @@ const Login = () => {
         gmail: '',
         password: '',
     });
+    const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { login } = useAuth();
@@ -41,169 +44,222 @@ const Login = () => {
         window.location.href = `${url}/api/auth/github`;
     };
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
     return (
-        <motion.div
-            className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-100 to-gray-200 p-4 sm:p-6 md:p-8 relative overflow-hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-        >
-            {/* Animated Background Elements */}
-            <motion.div
-                className="absolute inset-0 z-0"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 1.5, ease: 'easeOut' }}
-            >
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 relative overflow-hidden">
+            {/* Animated Background */}
+            <div className="absolute inset-0">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
                 <motion.div
-                    className="absolute w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 bg-purple-200 rounded-full opacity-20 -top-24 -left-24"
+                    className="absolute top-10 left-20 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"
                     animate={{
-                        scale: [1, 1.15, 1],
-                        x: [0, 25, 0],
-                        y: [0, 35, 0],
-                    }}
-                    transition={{ repeat: Infinity, duration: 7, ease: 'easeInOut' }}
-                />
-                <motion.div
-                    className="absolute w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 bg-indigo-200 rounded-full opacity-20 top-1/3 right-4"
-                    animate={{
-                        scale: [1, 1.25, 1],
-                        x: [0, -20, 0],
+                        scale: [1, 1.2, 1],
+                        x: [0, 30, 0],
                         y: [0, -30, 0],
                     }}
-                    transition={{ repeat: Infinity, duration: 9, ease: 'easeInOut' }}
+                    transition={{ duration: 7, repeat: Infinity }}
                 />
-            </motion.div>
+                <motion.div
+                    className="absolute top-10 right-20 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"
+                    animate={{
+                        scale: [1, 1.3, 1],
+                        x: [0, -25, 0],
+                        y: [0, 25, 0],
+                    }}
+                    transition={{ duration: 8, repeat: Infinity }}
+                />
+                <motion.div
+                    className="absolute bottom-20 left-32 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"
+                    animate={{
+                        scale: [1, 1.1, 1],
+                        x: [0, 20, 0],
+                        y: [0, 30, 0],
+                    }}
+                    transition={{ duration: 9, repeat: Infinity }}
+                />
+            </div>
 
             <motion.div
-                className="relative z-10 w-full max-w-md sm:max-w-lg lg:max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[400px]"
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                className="relative z-10 w-full max-w-md"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
             >
-                {/* Left Section - Login Form */}
-                <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 sm:p-10 bg-white">
-                    <motion.h2
-                        className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8"
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        Welcome Back
-                    </motion.h2>
-
-                    <div className="w-full max-w-md space-y-6">
-                        <div className="relative">
-                            <FaUser className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
-                            <motion.input
-                                id="gmail"
-                                name="gmail"
-                                type="email"
-                                required
-                                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-gray-900 placeholder-gray-500 transition-all duration-300"
-                                placeholder="Email"
-                                value={formData.gmail}
-                                onChange={handleChange}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.4, delay: 0.3 }}
-                            />
-                        </div>
-                        <div className="relative">
-                            <FaLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
-                            <motion.input
-                                id="password"
-                                name="password"
-                                type="password"
-                                required
-                                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-gray-900 placeholder-gray-500 transition-all duration-300"
-                                placeholder="Password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.4, delay: 0.4 }}
-                            />
-                        </div>
-
+                {/* Glassmorphism Card */}
+                <div className="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 shadow-2xl overflow-hidden">
+                    <div className="p-8">
+                        {/* Header */}
                         <motion.div
-                            initial={{ opacity: 0, y: 20 }}
+                            className="text-center mb-8"
+                            initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.5 }}
+                            transition={{ duration: 0.6 }}
                         >
-                            <button
-                                type="button"
-                                onClick={handleSubmit}
-                                disabled={isLoading}
-                                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-base sm:text-lg font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 disabled:opacity-50"
-                            >
-                                <AnimatePresence>
-                                    {isLoading ? (
-                                        <motion.span
-                                            key="loading"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                        >
-                                            Logging in...
-                                        </motion.span>
-                                    ) : (
-                                        <motion.span
-                                            key="login"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                        >
-                                            Login Now
-                                        </motion.span>
-                                    )}
-                                </AnimatePresence>
-                            </button>
+                            <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
+                            <p className="text-white/70">Sign in to your account</p>
                         </motion.div>
 
-
-                        <motion.p
-                            className="mt-6 text-center text-sm text-gray-600"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.4, delay: 0.7 }}
+                        {/* Social Login Buttons */}
+                        <motion.div
+                            className="grid grid-cols-2 gap-3 mb-6"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.1 }}
                         >
-                            Don't have an account?{' '}
-                            <Link to="/register" className="font-medium text-purple-600 hover:text-purple-500 transition-colors duration-200">
-                                Sign Up
-                            </Link>
-                        </motion.p>
+
+                        </motion.div>
+
+                        {/* Divider */}
+                        <div className="flex items-center mb-6">
+                            <div className="flex-1 h-px bg-white/20"></div>
+                            <div className="flex-1 h-px bg-white/20"></div>
+                        </div>
+
+                        {/* Login Form */}
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            {/* Email Input */}
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                            >
+                                <label className="block text-white/80 text-sm font-medium mb-2">
+                                    Email Address
+                                </label>
+                                <div className="relative">
+                                    <FaUser className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50 text-sm" />
+                                    <input
+                                        id="gmail"
+                                        name="gmail"
+                                        type="email"
+                                        required
+                                        className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all duration-300"
+                                        placeholder="Enter your email"
+                                        value={formData.gmail}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </motion.div>
+
+                            {/* Password Input */}
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6, delay: 0.3 }}
+                            >
+                                <label className="block text-white/80 text-sm font-medium mb-2">
+                                    Password
+                                </label>
+                                <div className="relative">
+                                    <FaLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50 text-sm" />
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type={showPassword ? "text" : "password"}
+                                        required
+                                        className="w-full pl-12 pr-12 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/50 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all duration-300"
+                                        placeholder="Enter your password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={togglePasswordVisibility}
+                                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white transition-colors duration-200"
+                                    >
+                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                    </button>
+                                </div>
+                            </motion.div>
+
+                            {/* Remember Me & Forgot Password */}
+                            <motion.div
+                                className="flex items-center justify-between"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, delay: 0.4 }}
+                            >
+
+                            </motion.div>
+
+                            {/* Login Button */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, delay: 0.5 }}
+                            >
+                                <button
+                                    type="submit"
+                                    disabled={isLoading}
+                                    className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium rounded-xl shadow-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <AnimatePresence mode="wait">
+                                        {isLoading ? (
+                                            <motion.span
+                                                key="loading"
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                className="flex items-center justify-center gap-2"
+                                            >
+                                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                Signing in...
+                                            </motion.span>
+                                        ) : (
+                                            <motion.span
+                                                key="login"
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                            >
+                                                Sign in
+                                            </motion.span>
+                                        )}
+                                    </AnimatePresence>
+                                </button>
+                            </motion.div>
+                        </form>
+
+                        {/* Sign Up Link */}
+                        <motion.div
+                            className="text-center mt-6"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.6 }}
+                        >
+                            <p className="text-white/70">
+                                Don't have an account?{' '}
+                                <Link to="/register" className="text-purple-300 hover:text-purple-200 font-medium transition-colors duration-200">
+                                    Sign up
+                                </Link>
+                            </p>
+                        </motion.div>
                     </div>
                 </div>
-
-                {/* Right Section - Decorative Background */}
-                <motion.div
-                    className="hidden lg:flex w-full lg:w-1/2 bg-gradient-to-br from-purple-600 to-indigo-700 relative overflow-hidden items-center justify-center p-8"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                >
-                    <div className="text-white text-center">
-                        <motion.h3
-                            className="text-xl sm:text-2xl font-bold mb-4"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.4 }}
-                        >
-                            Your Recipe Hub
-                        </motion.h3>
-                        <motion.p
-                            className="text-base sm:text-lg"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.5 }}
-                        >
-                            Sign in to explore and save your favorite recipes
-                        </motion.p>
-                    </div>
-                </motion.div>
             </motion.div>
-        </motion.div>
+
+            {/* Add custom styles for blob animation */}
+            <style jsx>{`
+                @keyframes blob {
+                    0% { transform: translate(0px, 0px) scale(1); }
+                    33% { transform: translate(30px, -50px) scale(1.1); }
+                    66% { transform: translate(-20px, 20px) scale(0.9); }
+                    100% { transform: translate(0px, 0px) scale(1); }
+                }
+                .animate-blob {
+                    animation: blob 7s infinite;
+                }
+                .animation-delay-2000 {
+                    animation-delay: 2s;
+                }
+                .animation-delay-4000 {
+                    animation-delay: 4s;
+                }
+            `}</style>
+        </div>
     );
 };
 

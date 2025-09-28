@@ -3,7 +3,7 @@ import { SavedRecipe } from "../models/SavedRecipe.js";
 import mongoose from "mongoose";
 // Add a new recipe
 export const addRecipe = async (req, res) => {
-  const { title, instructions, ingredients } = req.body;
+  const { title, instructions, ingredients, category, user } = req.body;
   let imgurl = req.body.imgurl; // for URL upload
 
   // If an image file is uploaded, use its path instead
@@ -11,23 +11,43 @@ export const addRecipe = async (req, res) => {
     imgurl = `${req.protocol}://${req.get("host")}/${req.file.path.replace(/\\/g, "/")}`;
   }
 
+  // Validate required fields
   if (!title || !instructions || !ingredients || !imgurl) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({ message: "Title, instructions, ingredients, and image are required" });
+  }
+
+  // Validate category if provided
+  if (category && !['veg', 'nonveg'].includes(category)) {
+    return res.status(400).json({ message: "Category must be either 'veg' or 'nonveg'" });
   }
 
   try {
     const parsedIngredients = typeof ingredients === "string" ? JSON.parse(ingredients) : ingredients;
 
+    // Validate ingredients format
+    if (!Array.isArray(parsedIngredients) || parsedIngredients.length === 0) {
+      return res.status(400).json({ message: "At least one ingredient is required" });
+    }
+
+    // Validate each ingredient has name and quantity
+    for (const ingredient of parsedIngredients) {
+      if (!ingredient.name || !ingredient.quantity) {
+        return res.status(400).json({ message: "Each ingredient must have both name and quantity" });
+      }
+    }
+
     const recipe = await Recipe.create({
-      title,
-      instructions,
+      title: title.trim(),
+      instructions: instructions.trim(),
       ingredients: parsedIngredients,
       imgurl,
-      user: req.user._id,
+      category: category || 'veg', // Default to veg if not provided
+      user: req.user._id, // Use authenticated user's ID
     });
 
     res.status(201).json({ message: "Recipe created successfully!", recipe });
   } catch (error) {
+    console.error("Error creating recipe:", error);
     res.status(500).json({ message: error.message || "Failed to create recipe" });
   }
 };
@@ -247,5 +267,51 @@ export const deleteRecipe = async (req, res) => {
     res.status(200).json({ message: "Recipe deleted successfully!" });
   } catch (error) {
     res.status(500).json({ message: error.message || "Failed to delete recipe" });
+  }
+};
+
+// Filter recipes by dietary preferences
+export const filterRecipesByCategory = async (req, res) => {
+  const { categories } = req.query;
+
+  try {
+    let query = {};
+
+    // Handle multiple categories or single category
+    if (categories) {
+      const categoryArray = Array.isArray(categories) ? categories : categories.split(',');
+
+      // Map frontend filter names to database values
+      const mappedCategories = categoryArray.map(cat => {
+        switch (cat.toLowerCase()) {
+          case 'vegetarian':
+          case 'veg':
+            return 'veg';
+          case 'nonvegetarian':
+          case 'non-vegetarian':
+          case 'nonveg':
+            return 'nonveg';
+          default:
+            return cat;
+        }
+      });
+
+      query.category = { $in: mappedCategories };
+    }
+
+    const recipes = await Recipe.find(query)
+      .populate("user", "name gmail")
+      .sort({ createdAt: -1 });
+
+    res.json({
+      recipes,
+      count: recipes.length,
+      filters: {
+        categories: categories ? (Array.isArray(categories) ? categories : categories.split(',')) : []
+      }
+    });
+  } catch (error) {
+    console.error("Error filtering recipes:", error);
+    res.status(500).json({ message: error.message || "Failed to filter recipes" });
   }
 };
