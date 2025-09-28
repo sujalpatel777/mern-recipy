@@ -31,7 +31,7 @@ const Login = () => {
         try {
             const success = await login(formData);
             if (success) {
-                navigate('/');
+                navigate('/Home');
             }
         } catch (error) {
             // Error handled in context
